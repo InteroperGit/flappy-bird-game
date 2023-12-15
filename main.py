@@ -1,12 +1,19 @@
 import pygame
-
+import assets
 import configs
+from objects.background import Background
 
 pygame.init()
 
 screen = pygame.display.set_mode((configs.SCREEN_WIDTH, configs.SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
+
+assets.load_sprites()
+
+sprites = pygame.sprite.LayeredUpdates()
+
+Background(sprites)
 
 running = True
 
@@ -16,6 +23,8 @@ while running:
 			running = False
 
 	screen.fill("pink")
+
+	sprites.draw(screen)
 
 	pygame.display.flip()
 	clock.tick(configs.FPS)
