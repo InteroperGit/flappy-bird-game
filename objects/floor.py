@@ -1,10 +1,12 @@
 import pygame.sprite
 import configs
 import assets
+from layer import Layer
 
 class Floor(pygame.sprite.Sprite):
 	def __init__(self, index, *groups):
 
+		self._layer = Layer.FLOOR
 		self.image = assets.get_sprite("floor")
 		self.rect = self.image.get_rect(topleft=(configs.SCREEN_WIDTH * index, 
 				configs.SCREEN_HEIGHT - self.image.get_height()))

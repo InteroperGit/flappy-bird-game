@@ -4,10 +4,12 @@ import pygame.transform
 import configs
 import assets
 import random
+from layer import Layer
 
 class Column(pygame.sprite.Sprite):
 	def __init__(self, *groups):
 
+		self._layer = Layer.OBSTACLE
 		self.gap = configs.PIPE_GAP
 		self.sprite = assets.get_sprite("pipe-green")
 		self.sprite_rect = self.sprite.get_rect()
@@ -46,4 +48,7 @@ class Column(pygame.sprite.Sprite):
 	
 	def update(self):
 		self.rect.x -= configs.PIPE_MOVE_SPEED
+
+		if self.rect.right <= 0:
+			self.kill()
 
