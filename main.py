@@ -4,6 +4,17 @@ import configs
 from objects.background import Background
 from objects.floor import Floor
 from objects.column import Column
+from objects.bird import Bird
+
+def create_game_objects(sprites):
+	for i in range(2):
+		Background(i, sprites)
+		Floor(i, sprites)
+
+	Column(sprites)
+	bird = Bird(sprites)
+
+	return [bird]
 
 pygame.init()
 
@@ -16,11 +27,7 @@ assets.load_sprites()
 sprites = pygame.sprite.LayeredUpdates()
 column_create_event = pygame.USEREVENT
 
-for i in range(2):
-	Background(i, sprites)
-	Floor(i, sprites)
-
-Column(sprites)
+[bird] = create_game_objects(sprites)
 
 pygame.time.set_timer(column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
 
@@ -34,7 +41,9 @@ while running:
 		if event.type == column_create_event:
 			Column(sprites)
 
-	screen.fill("pink")
+		bird.handle_event(event)
+
+	screen.fill(0)
 
 	sprites.draw(screen)
 	sprites.update()
