@@ -32,6 +32,7 @@ column_create_event = pygame.USEREVENT
 pygame.time.set_timer(column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
 
 running = True
+gameover = False
 
 while running:
 	for event in pygame.event.get():
@@ -46,7 +47,12 @@ while running:
 	screen.fill(0)
 
 	sprites.draw(screen)
-	sprites.update()
+	
+	if not gameover:
+		sprites.update()
+
+	if bird.check_collisions(sprites):
+		gameover = True
 
 	pygame.display.flip()
 	clock.tick(configs.FPS)

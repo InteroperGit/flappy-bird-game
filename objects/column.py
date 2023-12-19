@@ -1,5 +1,6 @@
 import pygame
 import pygame.sprite
+import pygame.mask
 import pygame.transform
 import configs
 import assets
@@ -29,8 +30,11 @@ class Column(pygame.sprite.Sprite):
 			),
 			pygame.SRCALPHA
 		)
+
 		self.image.blit(self.bottom_pipe, self.bottom_pipe_rect)
 		self.image.blit(self.top_pipe, self.top_pipe_rect)
+
+		self.mask = pygame.mask.from_surface(self.image)
 
 		sprite_floor_height = assets.get_sprite("floor").get_rect().height
 		min_y = configs.PIPE_MIN_Y
