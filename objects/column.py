@@ -8,6 +8,20 @@ import random
 from layer import Layer
 
 class Column(pygame.sprite.Sprite):
+	def __create_image(self):
+		image = pygame.surface.Surface(
+			(
+				self.sprite_rect.width,
+			 	self.sprite_rect.height * 2 + self.gap
+			),
+			pygame.SRCALPHA
+		)
+
+		image.blit(self.bottom_pipe, self.bottom_pipe_rect)
+		image.blit(self.top_pipe, self.top_pipe_rect)
+
+		return image
+
 	def __init__(self, *groups):
 
 		self._layer = Layer.OBSTACLE
@@ -23,16 +37,7 @@ class Column(pygame.sprite.Sprite):
 		self.top_pipe = pygame.transform.flip(self.sprite, flip_x=False, flip_y=True)
 		self.top_pipe_rect = self.top_pipe.get_rect(topleft=(0, 0))
 
-		self.image = pygame.surface.Surface(
-			(
-				self.sprite_rect.width,
-			 	self.sprite_rect.height * 2 + self.gap
-			),
-			pygame.SRCALPHA
-		)
-
-		self.image.blit(self.bottom_pipe, self.bottom_pipe_rect)
-		self.image.blit(self.top_pipe, self.top_pipe_rect)
+		self.image = self.__create_image()
 
 		self.mask = pygame.mask.from_surface(self.image)
 
@@ -42,7 +47,7 @@ class Column(pygame.sprite.Sprite):
 
 		self.rect = self.image.get_rect(
 			midleft=(
-				configs.SCREEN_WIDTH, 
+				configs.SCREEN_WIDTH * 2, 
 				random.uniform(min_y, max_y)
 			)
 		)
