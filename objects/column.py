@@ -47,6 +47,8 @@ class Column(pygame.sprite.Sprite):
 			)
 		)
 
+		self.passed = False
+
 		super().__init__(*groups)
 
 	
@@ -55,4 +57,11 @@ class Column(pygame.sprite.Sprite):
 
 		if self.rect.right <= 0:
 			self.kill()
+
+	def is_passed(self):
+		if self.rect.x < configs.COLUMN_IS_PASSED_X and not self.passed:
+			self.passed = True
+			return True
+
+		return False
 

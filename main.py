@@ -33,6 +33,7 @@ pygame.time.set_timer(column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
 
 running = True
 gameover = False
+score = 0
 
 while running:
 	for event in pygame.event.get():
@@ -53,6 +54,12 @@ while running:
 
 	if bird.check_collisions(sprites):
 		gameover = True
+
+	for sprite in sprites:
+		if type(sprite) is Column and sprite.is_passed():
+			score += 1
+
+	print(f'score = [{score}]')
 
 	pygame.display.flip()
 	clock.tick(configs.FPS)
