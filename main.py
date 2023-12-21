@@ -35,18 +35,18 @@ bird, game_start_message = create_game_objects(sprites)
 
 running = True
 gameover = False
-score = 0
 game_started = False
+score = 0
 
 while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
 
-		if event.type == column_create_event and game_started:
+		elif event.type == column_create_event and game_started:
 			Column(sprites)
 
-		if event.type == pygame.KEYDOWN:
+		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE and not game_started and not gameover:
 				game_started = True
 				game_start_message.kill()
@@ -56,15 +56,16 @@ while running:
 				game_started = False
 				sprites.empty()
 				bird, game_start_message = create_game_objects(sprites)
-
-		bird.handle_event(event)
+			if game_started and not gameover:
+				bird.handle_event(event)
 
 	screen.fill(0)
-
 	sprites.draw(screen)
 	
 	if game_started and not gameover:
 		sprites.update()
+
+	pygame.display.update()
 
 	if bird.check_collisions(sprites):
 		gameover = True
@@ -76,7 +77,6 @@ while running:
 		if type(sprite) is Column and sprite.is_passed():
 			score += 1
 
-	pygame.display.flip()
 	clock.tick(configs.FPS)
 
 pygame.quit()
