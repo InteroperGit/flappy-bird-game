@@ -6,6 +6,7 @@ from objects.floor import Floor
 from objects.column import Column
 from objects.bird import Bird
 from objects.game_start_message import GameStartMessage
+from objects.game_over_message import GameOverMessage
 from datetime import datetime
 
 def create_game_objects(sprites):
@@ -17,7 +18,7 @@ def create_game_objects(sprites):
 
 	game_start_message = GameStartMessage(sprites)
 
-	return [bird, game_start_message]
+	return bird, game_start_message
 
 pygame.init()
 
@@ -30,9 +31,7 @@ assets.load_sprites()
 sprites = pygame.sprite.LayeredUpdates()
 column_create_event = pygame.USEREVENT
 
-[bird, game_start_message] = create_game_objects(sprites)
-
-pygame.time.set_timer(column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
+bird, game_start_message = create_game_objects(sprites)
 
 running = True
 gameover = False
@@ -48,9 +47,15 @@ while running:
 			Column(sprites)
 
 		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_SPACE:
+			if event.key == pygame.K_SPACE and not game_started and not gameover:
 				game_started = True
 				game_start_message.kill()
+				pygame.time.set_timer(column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
+			if event.key == pygame.K_ESCAPE and gameover:
+				gameover = False
+				game_started = False
+				sprites.empty()
+				bird, game_start_message = create_game_objects(sprites)
 
 		bird.handle_event(event)
 
@@ -64,6 +69,8 @@ while running:
 	if bird.check_collisions(sprites):
 		gameover = True
 		game_started = False
+		GameOverMessage(sprites)
+		pygame.time.set_timer(column_create_event, 0)
 
 	for sprite in sprites:
 		if type(sprite) is Column and sprite.is_passed():
