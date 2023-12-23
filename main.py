@@ -7,6 +7,7 @@ from objects.column import Column
 from objects.bird import Bird
 from objects.game_start_message import GameStartMessage
 from objects.game_over_message import GameOverMessage
+from objects.score import Score
 from datetime import datetime
 
 def create_game_objects(sprites):
@@ -15,10 +16,10 @@ def create_game_objects(sprites):
 		Floor(i, sprites)
 
 	bird = Bird(sprites)
-
 	game_start_message = GameStartMessage(sprites)
+	score = Score(sprites)
 
-	return bird, game_start_message
+	return bird, game_start_message, score
 
 pygame.init()
 
@@ -31,12 +32,11 @@ assets.load_sprites()
 sprites = pygame.sprite.LayeredUpdates()
 column_create_event = pygame.USEREVENT
 
-bird, game_start_message = create_game_objects(sprites)
+bird, game_start_message, score = create_game_objects(sprites)
 
 running = True
 gameover = False
 game_started = False
-score = 0
 
 while running:
 	for event in pygame.event.get():
@@ -55,7 +55,7 @@ while running:
 				gameover = False
 				game_started = False
 				sprites.empty()
-				bird, game_start_message = create_game_objects(sprites)
+				bird, game_start_message, score = create_game_objects(sprites)
 			if game_started and not gameover:
 				bird.handle_event(event)
 
@@ -75,7 +75,7 @@ while running:
 
 	for sprite in sprites:
 		if type(sprite) is Column and sprite.is_passed():
-			score += 1
+			score.value += 1
 
 	clock.tick(configs.FPS)
 
