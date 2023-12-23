@@ -28,6 +28,7 @@ class Core():
 		self.running = False
 		self.gameover = False
 		self.game_started = False
+		assets.play_audio("levelend", True)
 
 	def __create_game_objects(self, sprites):
 		for i in range(2):
@@ -53,11 +54,15 @@ class Core():
 					self.game_started = True
 					self.game_start_message.kill()
 					pygame.time.set_timer(self.column_create_event, configs.COLUMN_CREATE_EVENT_PERIOD)
+					assets.stop_audio("levelend")
+					assets.stop_audio("gameover")
+					assets.play_audio("overworld", True)
 				if event.key == pygame.K_ESCAPE and self.gameover:
 					self.gameover = False
 					self.game_started = False
 					self.sprites.empty()
 					self.bird, self.game_start_message, self.score = self.__create_game_objects(self.sprites)
+					assets.play_audio("levelend", True)
 				if self.game_started and not self.gameover:
 					self.bird.handle_event(event)
 
@@ -76,6 +81,8 @@ class Core():
 			self.gameover = True
 			self.game_started = False
 			GameOverMessage(self.sprites)
+			assets.stop_audio("overworld")
+			assets.play_audio("gameover")
 			pygame.time.set_timer(self.column_create_event, 0)
 
 	def __check_column_pass(self):
@@ -96,4 +103,5 @@ class Core():
 
 	def __stop(self):
 		self.running = False
+		assets.stop_audio("overworld")
 		pygame.quit()

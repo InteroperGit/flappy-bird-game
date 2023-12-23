@@ -20,5 +20,8 @@ def load_audios():
 	for file in os.listdir(path):
 		audios[file.split('.')[0]] = pygame.mixer.Sound(os.path.join(path, file))
 
-def play_audio(name):
-	audios[name].play()
+def play_audio(name, loops=False):
+	audios[name].play(loops=loops)
+
+def stop_audio(name):
+	audios[name].stop()
