@@ -28,6 +28,7 @@ screen = pygame.display.set_mode((configs.SCREEN_WIDTH, configs.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
 assets.load_sprites()
+assets.load_audios()
 
 sprites = pygame.sprite.LayeredUpdates()
 column_create_event = pygame.USEREVENT
@@ -67,7 +68,8 @@ while running:
 
 	pygame.display.update()
 
-	if bird.check_collisions(sprites):
+	if bird.check_collisions(sprites) and not gameover:
+		assets.play_audio("hit")
 		gameover = True
 		game_started = False
 		GameOverMessage(sprites)
@@ -76,6 +78,7 @@ while running:
 	for sprite in sprites:
 		if type(sprite) is Column and sprite.is_passed():
 			score.value += 1
+			assets.play_audio("point")
 
 	clock.tick(configs.FPS)
 

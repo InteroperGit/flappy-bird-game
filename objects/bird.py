@@ -27,10 +27,9 @@ class Bird(pygame.sprite.Sprite):
 			))
 
 		self.mask = pygame.mask.from_surface(self.image)
-
 		self.flap = 0
-
-		self.collision_num = 0
+		self.__is_damaged = False
+		self.__is_above_ceil = False
 
 		super().__init__(*groups)
 
@@ -49,20 +48,24 @@ class Bird(pygame.sprite.Sprite):
 		if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 			self.flap = 0
 			self.flap -= configs.BIRD_FLY_UP_COEFF
+			assets.play_audio("wing")
 
 	def check_collisions(self, sprites):
-		is_above_ceil = self.rect.bottom < 0
+		if self.__is_damaged or self.__is_above_ceil:
+			return False
 
-		if is_above_ceil:
+		self.__is_above_ceil = self.rect.bottom < 0
+
+		if self.__is_above_ceil:
 			return True
 
 		for sprite in sprites:
 			is_column = type(sprite) is Column
 			is_floor = type(sprite) is Floor
-			is_damage = (is_column or is_floor) and sprite.mask.overlap(self.mask, 
+			self.__is_damaged = (is_column or is_floor) and sprite.mask.overlap(self.mask, 
 					(self.rect.x - sprite.rect.x, self.rect.y - sprite.rect.y))
 			
-			if is_damage:
+			if self.__is_damaged:
 				return True
 
 		return False
